@@ -1,0 +1,82 @@
+# /etc/network/interfaces -- configuration file for ifup(8), ifdown(8)
+# Custom network interface file 
+
+# The loopback interface
+auto lo
+iface lo inet loopback
+
+# Wired interface
+auto eth0
+iface eth0 inet dhcp
+# address 192.168.2.1
+# netmask 255.255.255.0
+# Forwarding packets on eth0
+# gateway 192.168.2.2
+# pre-up bash -c 'echo 1 >/proc/sys/net/ipv4/ip_forward'
+# post-up iptables -F
+# post-up iptables -t nat -F
+# post-up iptables -t mangle -F
+# post-up iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+# Bridge interface with eth0 (comment out eth0 lines above to use with bridge)
+# iface eth0 inet manual
+#
+# auto br0
+# iface br0 inet static
+# bridge_ports eth0
+# address 192.168.2.1
+# netmask 255.255.255.0
+
+# Wifi client
+#
+# For MTR WiFi only:
+# NOTE: udev rules will bring up wlan0 automatically if a wifi device is detected
+# and the wlan0 interface is defined, therefore an "auto wlan0" line is not needed.
+# If "auto wlan0" is also specified, startup conflicts may result.
+#iface wlan0 inet dhcp
+#wpa-conf /var/config/wpa_supplicant.conf
+#wpa-driver nl80211
+#
+# For Conduit WiFi:
+# You must configure wpa_supplicant.conf as appropriate for your WiFi access point
+# and its security.  The "pre-up" section is needed to create the VAP device,
+# wifi0.  udhcpc_opts should be used to prevent DHCP from giving up too soon.  The
+# default timeout is less than 10 seconds, and in some circumstances is not enough
+# time for wifi to connect. The udhcpc options specified below are in addition to
+# those preconfigured in the ifup program.  The option "-t" specifies the number
+# of DHCP retries.  By default each trial is 3 seconds long.  As specified here,
+# udhcpc will try for thirty seconds. The option "-b" specifies that if the
+# attempts are made and all fail, the boot will proceed, and the udhcpc program
+# will continue to periodically attempt to reach the DHCP server.  Without the -b
+# option, udhcpc will fail and abort if the server is not reached within the
+# specified timeout.  The boot will continue after the timeout, but the network
+# will never be connected without some other intervention.
+#
+# Specifying "-t 0" results in udhcpc not running in the background, regardless
+# of the presence of "-b".  This causes udhcpc to enter a loop trying to reach
+# the DHCP server, and only relinquising control to the boot (or ifup) if the
+# server responds.
+#
+# The udhcpc_opts parameter will result in the following invocation
+# of udhcpc from ifup:
+# udhcpc -R -n -p /var/run/udhcpc.wifi0.pid -i wifi0 -t 10 -b
+#
+# See https://busybox.net/downloads/BusyBox.html for more information.
+#
+# auto wifi0
+# iface wifi0 inet dhcp
+# wpa-conf /etc/wpa_supplicant.conf
+# wpa-driver nl80211
+# pre-up bash -c '([[ -d /sys/class/net/wifi0 ]] || /opt/rs9113/onebox_util rpine0 create_vap wifi0 sta sw_bmiss)'
+# udhcpc_opts -t 10 -b
+
+# The pan0 interface purpose is to support bluetooth pand
+# If access to another network is required, the ip forwarding
+# for eth0 could be enabled. 
+# auto pan0
+# iface pan0 inet static
+# address 10.1.0.1
+# netmask 255.255.255.0
+# pre-up brctl addbr pan0
+# pre-up brctl setfd pan0 0
+# pre-up brctl stp pan0 off
