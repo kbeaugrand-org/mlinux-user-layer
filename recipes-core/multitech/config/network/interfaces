@@ -1,5 +1,4 @@
-# /etc/network/interfaces -- configuration file for ifup(8), ifdown(8)
-# Custom network interface file 
+# /var/config/network/interfaces -- configuration file for ifup(8), ifdown(8)
 
 # The loopback interface
 auto lo
@@ -8,22 +7,8 @@ iface lo inet loopback
 # Wired interface
 auto eth0
 iface eth0 inet dhcp
-# address 192.168.2.1
-# netmask 255.255.255.0
-# Forwarding packets on eth0
-# gateway 192.168.2.2
-# pre-up bash -c 'echo 1 >/proc/sys/net/ipv4/ip_forward'
-# post-up iptables -F
-# post-up iptables -t nat -F
-# post-up iptables -t mangle -F
-# post-up iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
-# Bridge interface with eth0 (comment out eth0 lines above to use with bridge)
-# iface eth0 inet manual
-#
-# auto br0
-# iface br0 inet static
-# bridge_ports eth0
+# iface eth0 inet static
 # address 192.168.2.1
 # netmask 255.255.255.0
 

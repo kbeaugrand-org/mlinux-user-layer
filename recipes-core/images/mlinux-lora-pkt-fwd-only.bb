@@ -4,4 +4,4 @@ LICENSE = "MIT"
 
 require recipes-core/images/mlinux-base-image.bb
  
-IMAGE_INSTALL += "lora-packet-forwarder config"
+IMAGE_INSTALL += "lora-packet-forwarder config monit"
